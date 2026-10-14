@@ -1,8 +1,17 @@
-# Mie Yamin Pagi Sore Kemiling - Node.js + SQLite scaffold
+# Mie Yamin Pagi Sore Kemiling - Node.js + SQLite scaffold (Updated UI)
 
 Repository: https://github.com/naufalrapasya2/mieyaminpagisorekemiling-site
 
-Quickstart:
+What's new in this update:
+- Improved UI styles and responsive layout
+- Product images support (image_url column)
+- Client-side cart (add to cart, modal, checkout)
+- Category pages with images and add-to-cart
+- Receipt (struk) page formatted with order breakdown
+- Ratings page and Location page with Google Maps embed
+- Admin menu management supports image URL and shows thumbnails
+
+Quickstart (same as before):
 
 1. Clone repo
    git clone https://github.com/naufalrapasya2/mieyaminpagisorekemiling-site
@@ -11,25 +20,13 @@ Quickstart:
    npm install
 3. Copy env
    cp .env.example .env
-   Edit .env if needed
 4. Initialize database and seed data
    npm run init-db
-   (This creates data/database.sqlite and a default admin user: admin@mieyamin.local / Admin123!)
 5. Start server
    npm start
 6. Open http://localhost:3000
 
-Admin:
-- Login: http://localhost:3000/admin/login
-- Default admin: admin@mieyamin.local / Admin123!
-
-Notes:
-- Passwords are hashed using bcryptjs.
-- Forgot password page allows resetting password by providing the admin email and a new password (SMTP not configured).
-- Midtrans payment integration placeholders exist; fill MIDTRANS_* keys in .env and implement server-side calls in routes when ready.
-- To deploy to your domain mieyaminpagisorekemiling.id, upload to your server or VPS, set NODE_ENV=production, install Node.js, and configure reverse proxy (NGINX) + SSL.
-
-What's next I'll do if you want:
-- Implement Midtrans checkout flow and sample integration.
-- Add PDF receipt generation and printing.
-- Add more UI polish and full menu seed (if you want every item added).
+Notes & next steps:
+- Fill MIDTRANS keys in .env to enable card payments (server code to call Midtrans can be added).
+- You can upload real product images and use their URLs when adding menu items in admin.
+- For production deployment, configure a reverse proxy (NGINX) and SSL for mieyaminpagisorekemiling.id.

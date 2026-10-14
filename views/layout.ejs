@@ -8,12 +8,17 @@
 </head>
 <body>
   <header>
-    <div class="container">
+    <div class="container header-inner">
       <h1><a href="/">MIE YAMIN PAGI SORE KEMILING</a></h1>
-      <nav>
-        <a href="/order/shopee" target="_blank">Pesan via ShopeeFood</a>
-        <a href="/admin/login">Admin</a>
-      </nav>
+      <div class="header-right">
+        <nav>
+          <a href="/ratings">Penilaian</a>
+          <a href="/location">Lokasi</a>
+          <a href="/order/shopee" target="_blank">Pesan via ShopeeFood</a>
+          <a href="/admin/login">Admin</a>
+        </nav>
+        <button id="cart-open-btn" class="cart-btn">Keranjang (<span id="cart-count">0</span>)</button>
+      </div>
     </div>
   </header>
   <main class="container">
@@ -22,5 +27,16 @@
   <footer>
     <div class="container">Penjualan: Lebih dari 2.596 Penilaian • Jl. Imam Bonjol, Kemiling Permai Bandar Lampung</div>
   </footer>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <button id="cart-close-btn" class="modal-close">Tutup</button>
+      <h3>Keranjang Anda</h3>
+      <div id="cart-body"></div>
+    </div>
+  </div>
+
+  <script src="/js/site.js"></script>
 </body>
 </html>

@@ -1,0 +1,29 @@
+<%- include('layout') %>
+
+<section>
+  <h2>Struk Pesanan</h2>
+  <p><strong>Order ID:</strong> <%= orderId %></p>
+  <p><strong>Nama:</strong> <%= customer_name %></p>
+  <p><strong>Metode Pembayaran:</strong> <%= payment_method %></p>
+
+  <h3>Rincian Pesanan</h3>
+  <table class="table">
+    <tr><th>Menu</th><th>Qty</th><th>Per item</th><th>Subtotal</th></tr>
+    <% items.forEach(function(it){ %>
+      <tr>
+        <td><%= it.name %></td>
+        <td><%= it.qty %></td>
+        <td>Rp.<%= Number(it.price).toLocaleString('id-ID') %></td>
+        <td>Rp.<%= (it.qty * it.price).toLocaleString('id-ID') %></td>
+      </tr>
+    <% }); %>
+  </table>
+
+  <p>Subtotal: Rp.<%= subtotal.toLocaleString('id-ID') %></p>
+  <p>Ongkir: Rp.<%= ship.toLocaleString('id-ID') %></p>
+  <p>Biaya Layanan: Rp.<%= fee.toLocaleString('id-ID') %></p>
+  <h3>Total: Rp.<%= total.toLocaleString('id-ID') %></h3>
+
+  <p>Terima kasih telah memesan di MIE YAMIN PAGI SORE KEMILING.</p>
+  <p><a href="/">Kembali ke beranda</a></p>
+</section>

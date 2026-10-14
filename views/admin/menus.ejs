@@ -17,15 +17,17 @@
     <label>Nama<br><input name="name" required></label>
     <label>Deskripsi<br><input name="description"></label>
     <label>Harga (angka)<br><input name="price" required></label>
+    <label>URL Gambar<br><input name="image_url" placeholder="https://..."></label>
     <button type="submit">Tambah</button>
   </form>
 
   <h3>Daftar Menu</h3>
   <table class="table">
-    <tr><th>ID</th><th>Nama</th><th>Kategori</th><th>Harga</th><th>Aksi</th></tr>
+    <tr><th>ID</th><th>Gambar</th><th>Nama</th><th>Kategori</th><th>Harga</th><th>Aksi</th></tr>
     <% items.forEach(function(it){ %>
       <tr>
         <td><%= it.id %></td>
+        <td><% if(it.image_url){ %><img src="<%= it.image_url %>" alt="" style="width:120px; height:auto;" /> <% } else { %> - <% } %></td>
         <td><%= it.name %></td>
         <td><%= it.category_name %></td>
         <td>Rp.<%= (it.price || 0).toLocaleString('id-ID') %></td>

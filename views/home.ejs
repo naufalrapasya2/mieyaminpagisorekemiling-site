@@ -19,10 +19,15 @@
   <div class="grid">
     <% items.forEach(function(it){ %>
       <div class="card">
+        <img src="<%= it.image_url || '/images/placeholder.png' %>" alt="<%= it.name %>" />
         <h3><%= it.name %></h3>
         <p class="muted"><%= it.category_name %></p>
         <p><%= it.description %></p>
         <p class="price">Rp.<%= (it.price || 0).toLocaleString('id-ID') %></p>
+        <div class="card-actions">
+          <label>Qty: <input type="number" id="qty-<%= it.id %>" value="1" min="1" style="width:60px"></label>
+          <button onclick="Cart.add({ id: <%= it.id %>, name: '<%= it.name.replace(/'/g,"\\'") %>', price: <%= it.price %>, qty: document.getElementById('qty-<%= it.id %>').value })">Tambah ke Keranjang</button>
+        </div>
       </div>
     <% }); %>
   </div>
