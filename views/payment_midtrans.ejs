@@ -1,0 +1,8 @@
+<%- include('layout') %>
+
+<section>
+  <h2>Pembayaran Kartu (Midtrans)</h2>
+  <p>Anda akan diarahkan ke halaman pembayaran Midtrans untuk menyelesaikan transaksi.</p>
+  <p><a class="btn" href="<%= redirect_url %>" target="_blank">Buka Halaman Pembayaran</a></p>
+  <p>Jika tidak ada, server Midtrans kemungkinan belum dikonfigurasi. Isi MIDTRANS_SERVER_KEY di .env.</p>
+</section>

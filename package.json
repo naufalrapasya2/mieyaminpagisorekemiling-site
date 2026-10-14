@@ -1,6 +1,6 @@
 {
   "name": "mieyaminpagisorekemiling-site",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Admin + customer site for MIE YAMIN PAGI SORE KEMILING (Node.js + SQLite)",
   "main": "app.js",
   "scripts": {
@@ -11,12 +11,15 @@
   "author": "naufalrapasya2",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.5.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "midtrans-client": "^2.1.0",
+    "pdfkit": "^0.13.0",
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {

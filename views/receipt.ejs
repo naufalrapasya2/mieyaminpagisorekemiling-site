@@ -24,6 +24,21 @@
   <p>Biaya Layanan: Rp.<%= fee.toLocaleString('id-ID') %></p>
   <h3>Total: Rp.<%= total.toLocaleString('id-ID') %></h3>
 
+  <% if(redirect_url){ %>
+    <p>Silakan lanjutkan pembayaran melalui Midtrans:</p>
+    <p><a class="btn" href="<%= redirect_url %>" target="_blank">Lanjutkan Pembayaran</a></p>
+  <% } else { %>
+    <p>Metode pembayaran: <strong><%= payment_method %></strong></p>
+  <% } %>
+
+  <% if(notice){ %>
+    <p class="error"><%= notice %></p>
+  <% } %>
+
+  <p>
+    <a href="/receipt/<%= orderId %>/pdf" class="btn">Download PDF Struk</a>
+    <a href="/" class="btn">Kembali ke beranda</a>
+  </p>
+
   <p>Terima kasih telah memesan di MIE YAMIN PAGI SORE KEMILING.</p>
-  <p><a href="/">Kembali ke beranda</a></p>
 </section>

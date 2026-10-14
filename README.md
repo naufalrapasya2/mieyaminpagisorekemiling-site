@@ -1,32 +1,24 @@
-# Mie Yamin Pagi Sore Kemiling - Node.js + SQLite scaffold (Updated UI)
+# Mie Yamin Pagi Sore Kemiling - Node.js + SQLite scaffold (Finalization)
 
-Repository: https://github.com/naufalrapasya2/mieyaminpagisorekemiling-site
+This update adds:
+- Midtrans payment integration (server-side) placeholder: if MIDTRANS_SERVER_KEY is set in .env, the app creates a Snap transaction and redirects customer to Midtrans payment page.
+- PDF receipt generation using PDFKit (/receipt/:id/pdf)
+- Admin order management page (/admin/orders) with status update
+- Product images updated to Unsplash sample URLs (you can replace with your real images)
+- Admin can set image_url when adding menu items
 
-What's new in this update:
-- Improved UI styles and responsive layout
-- Product images support (image_url column)
-- Client-side cart (add to cart, modal, checkout)
-- Category pages with images and add-to-cart
-- Receipt (struk) page formatted with order breakdown
-- Ratings page and Location page with Google Maps embed
-- Admin menu management supports image URL and shows thumbnails
+.env variables to set for payments:
+- MIDTRANS_SERVER_KEY - your Midtrans server key
+- MIDTRANS_PRODUCTION - set to '1' for production environment
 
-Quickstart (same as before):
+If MIDTRANS keys are not set, the checkout will still create orders and render receipt but won't redirect to a live payment gateway.
 
-1. Clone repo
-   git clone https://github.com/naufalrapasya2/mieyaminpagisorekemiling-site
-2. Install
-   cd mieyaminpagisorekemiling-site
-   npm install
-3. Copy env
-   cp .env.example .env
-4. Initialize database and seed data
-   npm run init-db
-5. Start server
-   npm start
-6. Open http://localhost:3000
+Quick run (same as before):
+1. npm install (will install midtrans-client and pdfkit)
+2. npm run init-db
+3. npm start
 
-Notes & next steps:
-- Fill MIDTRANS keys in .env to enable card payments (server code to call Midtrans can be added).
-- You can upload real product images and use their URLs when adding menu items in admin.
-- For production deployment, configure a reverse proxy (NGINX) and SSL for mieyaminpagisorekemiling.id.
+Notes:
+- Replace sample Unsplash image URLs in db/init.js if you have real product photos.
+- To fully enable card payments, provide MIDTRANS_SERVER_KEY and set MIDTRANS_PRODUCTION accordingly.
+- For production deployment, secure your .env and use HTTPS for the domain.

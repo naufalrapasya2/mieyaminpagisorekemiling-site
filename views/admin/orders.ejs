@@ -1,0 +1,34 @@
+<%- include('../layout') %>
+
+<section>
+  <h2>Daftar Pesanan</h2>
+  <p><a href="/admin">Kembali</a></p>
+
+  <table class="table">
+    <tr><th>ID</th><th>Nama</th><th>Total</th><th>Metode</th><th>Status</th><th>Waktu</th><th>Aksi</th></tr>
+    <% orders.forEach(function(o){ %>
+      <tr>
+        <td><%= o.id %></td>
+        <td><%= o.customer_name %></td>
+        <td>Rp.<%= (o.total || 0).toLocaleString('id-ID') %></td>
+        <td><%= o.payment_method %></td>
+        <td><%= o.status %></td>
+        <td><%= o.created_at %></td>
+        <td>
+          <form method="post" action="/admin/orders/update">
+            <input type="hidden" name="id" value="<%= o.id %>">
+            <select name="status">
+              <option value="pending" <%= o.status==='pending'?'selected':'' %>>pending</option>
+              <option value="confirmed" <%= o.status==='confirmed'?'selected':'' %>>confirmed</option>
+              <option value="preparing" <%= o.status==='preparing'?'selected':'' %>>preparing</option>
+              <option value="delivered" <%= o.status==='delivered'?'selected':'' %>>delivered</option>
+              <option value="cancelled" <%= o.status==='cancelled'?'selected':'' %>>cancelled</option>
+            </select>
+            <button type="submit">Update</button>
+          </form>
+          <p><a href="/receipt/<%= o.id %>/pdf" target="_blank">Cetak Struk</a></p>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+</section>

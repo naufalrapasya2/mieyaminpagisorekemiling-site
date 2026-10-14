@@ -61,8 +61,8 @@ router.get('/menus', ensureAdmin, (req,res)=>{
 });
 
 router.post('/menus', ensureAdmin, (req,res)=>{
-  const { category_id, name, description, price } = req.body;
-  db.run(`INSERT INTO menu_items (category_id,name,description,price) VALUES (?,?,?,?)`, [category_id||null,name,description,price], function(err){
+  const { category_id, name, description, price, image_url } = req.body;
+  db.run(`INSERT INTO menu_items (category_id,name,description,price,image_url) VALUES (?,?,?,?,?)`, [category_id||null,name,description,price,image_url||null], function(err){
     if(err) return res.status(500).send('DB error');
     res.redirect('/admin/menus');
   });
@@ -71,6 +71,19 @@ router.post('/menus', ensureAdmin, (req,res)=>{
 router.post('/menus/delete', ensureAdmin, (req,res)=>{
   const { id } = req.body;
   db.run(`DELETE FROM menu_items WHERE id = ?`, [id], function(err){ if(err) return res.status(500).send('DB error'); res.redirect('/admin/menus'); });
+});
+
+// Orders management
+router.get('/orders', ensureAdmin, (req,res)=>{
+  db.all(`SELECT * FROM orders ORDER BY created_at DESC LIMIT 200`, [], (err,orders)=>{
+    if(err) return res.status(500).send('DB error');
+    res.render('admin/orders',{ orders });
+  });
+});
+
+router.post('/orders/update', ensureAdmin, (req,res)=>{
+  const { id, status } = req.body;
+  db.run(`UPDATE orders SET status = ? WHERE id = ?`, [status,id], function(err){ if(err) return res.status(500).send('DB error'); res.redirect('/admin/orders'); });
 });
 
 module.exports = router;
