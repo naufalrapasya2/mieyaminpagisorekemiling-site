@@ -1,86 +1,95 @@
-## Deploy-ready packaging & Midtrans activation guide
+# MIE YAMIN PAGI SORE KEMILING - final production deployment guide
 
-This section explains how to finalize templating with real product photos, activate Midtrans payments, and deploy the app to the domain mieyaminpagisorekemiling.id.
+This update adds:
+- Branch 'release/production' content merged into main for production packaging.
 
-1) Add real product photos
-- Two options:
-  - Upload images via Admin -> Kelola Menu by using the "Upload Gambar Produk" field. Uploaded files are saved to public/uploads and served automatically.
-  - Or host images elsewhere and paste their full URL into the "URL Gambar" field when adding/editing a menu item.
-- After uploading, open the home page to verify images appear on product cards.
+This document summarizes how to deploy and verify the application in production.
 
-2) Activate Midtrans payments (Card/Debit)
-- Sign up to Midtrans and get Server Key (for server-side API) and Client Key (for frontend if you decide to use Snap Web).
-- Add these to your .env file:
-  MIDTRANS_SERVER_KEY=your_server_key_here
-  MIDTRANS_PRODUCTION=0  # or 1 for production
-- The app uses midtrans-client on server-side to create Snap transactions when customer selects "Kartu Kredit/Debit" during checkout. If MIDTRANS_SERVER_KEY is missing, the order is still created but payment redirection will not occur.
-- To test, set MIDTRANS_PRODUCTION=0 and use your Midtrans sandbox Server Key.
+1) Prerequisites
+- Ubuntu VPS or hosting with Node.js 18+
+- Domain record: mieyaminpagisorekemiling.id -> server IP
+- Nginx installed
+- Certbot for HTTPS
+- PM2 installed
+- Midtrans credentials (if enabling payment gateway)
 
-3) Generate PDF struk
-- On receipt page, users can download PDF via /receipt/:id/pdf
-- Admin can also print receipt from admin orders list.
+2) Install system dependencies
+sudo apt update
+sudo apt install -y curl build-essential nginx certbot python3-certbot-nginx
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo npm i -g pm2
 
-4) Deploy to server and configure domain
-Prerequisites: a VPS (Ubuntu) or hosting with Node.js support. We'll outline steps for a typical Ubuntu VPS.
+3) Clone and switch to release branch
+cd /var/www
+sudo git clone git@github.com:naufalrapasya2/mieyaminpagisorekemiling-site.git
+cd mieyaminpagisorekemiling-site
+git checkout release/production
 
-a) Install Node.js, NPM and build tools
-  curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-  sudo apt-get install -y nodejs build-essential
+4) Configure environment
+cp .env.production.example .env
+nano .env
 
-b) Clone repo and install
-  git clone https://github.com/naufalrapasya2/mieyaminpagisorekemiling-site.git
-  cd mieyaminpagisorekemiling-site
-  npm install
-  cp .env.example .env
-  # edit .env: set PORT=3000, SESSION_SECRET, MIDTRANS_SERVER_KEY, etc.
-  npm run init-db
+Fill in values:
+- SESSION_SECRET: strong random string
+- MIDTRANS_SERVER_KEY / MIDTRANS_CLIENT_KEY: valid keys
+- MIDTRANS_PRODUCTION: 0 for sandbox, 1 for live
+- SMTP if email reset password is desired
 
-c) Run with PM2 (recommended)
-  sudo npm i -g pm2
-  pm2 start app.js --name mieyamin-site
-  pm2 save
-  pm2 startup systemd
+5) Install dependencies and initialize database
+npm install --production
+npm run init-db
 
-d) Setup Nginx as reverse proxy with SSL (Certbot)
-  sudo apt install nginx
-  # sample server block (replace with your domain)
-  
-  server {
+6) Start app via PM2
+pm2 start app.js --name mieyamin-site --env production
+pm2 save
+pm2 status
+
+7) Nginx reverse proxy
+Create /etc/nginx/sites-available/mieyamin:
+
+server {
     listen 80;
     server_name mieyaminpagisorekemiling.id www.mieyaminpagisorekemiling.id;
 
     location / {
-      proxy_pass http://127.0.0.1:3000;
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection 'upgrade';
-      proxy_set_header Host $host;
-      proxy_cache_bypass $http_upgrade;
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
 
     location /uploads/ {
-      alias /path/to/repo/public/uploads/;
+        alias /var/www/mieyaminpagisorekemiling-site/public/uploads/;
     }
-  }
+}
 
-  # enable and restart nginx
-  sudo ln -s /etc/nginx/sites-available/mieyamin /etc/nginx/sites-enabled/
-  sudo nginx -t
-  sudo systemctl restart nginx
+Then:
 
-  # obtain SSL
-  sudo apt install certbot python3-certbot-nginx
-  sudo certbot --nginx -d mieyaminpagisorekemiling.id -d www.mieyaminpagisorekemiling.id
+sudo ln -s /etc/nginx/sites-available/mieyamin /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
 
-5) DNS
-- Point your domain mieyaminpagisorekemiling.id to the server IP with an A record.
+8) SSL via Certbot
+sudo certbot --nginx -d mieyaminpagisorekemiling.id -d www.mieyaminpagisorekemiling.id
 
-6) Post-deploy checks
-- Visit https://mieyaminpagisorekemiling.id
-- Test uploads via admin and order flow
-- If using Midtrans, run a test transaction (sandbox keys) and verify redirect/payment
+9) Verify launch
+- Open https://mieyaminpagisorekemiling.id
+- Login admin at /admin/login
+- Test checkout flow
+- Test payment flow if Midtrans keys are valid
+- Test PDF receipt endpoint /receipt/:id/pdf
+- Test upload product image in admin panel
 
-If you want, saya bisa:
-- Tambahkan fungsi upload bulk foto (zip + unzip to uploads)
-- Membuat script deploy.sh untuk otomatisasi PM2 + Nginx setup (requires sudo)
-- Bantu lakukan deploy ke VPS (anda berikan akses) atau pandu langkah-langkah secara remote
+10) Production notes
+- .env must stay on the server and not be committed to GitHub.
+- Use PM2 logs and set proper permissions for upload folders.
+- Use production Midtrans keys only after sandbox testing succeeds.
+- If you do not have SMTP yet, the forgot-password feature continues to work via manual reset in the admin screen.
+
+11) Recommended next step after deployment
+- Replace placeholder product images with original pictures of each menu item.
+- Add final business metadata in SEO tags and social previews.
+- Re-test all flows in production before launching public campaigns.
