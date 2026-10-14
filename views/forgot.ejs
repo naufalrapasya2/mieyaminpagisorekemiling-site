@@ -1,0 +1,14 @@
+<%- include('../layout') %>
+
+<section>
+  <h2>Reset Password (Admin)</h2>
+  <% if(message){ %>
+    <p class="muted"><%= message %></p>
+  <% } %>
+  <form method="post" action="/admin/forgot">
+    <label>Email admin<br><input type="email" name="email" required></label>
+    <label>Password baru<br><input type="password" name="new_password" required></label>
+    <p>Karena SMTP belum dikonfigurasi, masukkan email admin dan password baru untuk menyetel ulang.</p>
+    <button type="submit">Reset Password</button>
+  </form>
+</section>

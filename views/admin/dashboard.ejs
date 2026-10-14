@@ -1,0 +1,22 @@
+<%- include('../layout') %>
+
+<section>
+  <h2>Dashboard Admin</h2>
+  <p>Selamat datang, <%= user.email %> | <a href="/admin/logout">Logout</a></p>
+
+  <h3>Pesanan Terakhir</h3>
+  <table class="table">
+    <tr><th>ID</th><th>Nama</th><th>Total</th><th>Status</th><th>Waktu</th></tr>
+    <% orders.forEach(function(o){ %>
+      <tr>
+        <td><%= o.id %></td>
+        <td><%= o.customer_name %></td>
+        <td>Rp.<%= (o.total || 0).toLocaleString('id-ID') %></td>
+        <td><%= o.status %></td>
+        <td><%= o.created_at %></td>
+      </tr>
+    <% }) %>
+  </table>
+
+  <p><a href="/admin/menus">Kelola Menu</a></p>
+</section>

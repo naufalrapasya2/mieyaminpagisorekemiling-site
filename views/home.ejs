@@ -1,0 +1,34 @@
+<%- include('layout', { body: null }) %>
+
+<section>
+  <p>Bisa Pesan Antar: ShopeeFood • Pickup</p>
+  <p class="muted">Deskripsi kecil: Harga disesuaikan dengan Ongkir pada ShopeeFood</p>
+</section>
+
+<section>
+  <h2>Kategori</h2>
+  <ul class="categories">
+    <% categories.forEach(function(c){ %>
+      <li><a href="/category/<%= c.id %>"><%= c.name %></a></li>
+    <% }); %>
+  </ul>
+</section>
+
+<section>
+  <h2>Menu</h2>
+  <div class="grid">
+    <% items.forEach(function(it){ %>
+      <div class="card">
+        <h3><%= it.name %></h3>
+        <p class="muted"><%= it.category_name %></p>
+        <p><%= it.description %></p>
+        <p class="price">Rp.<%= (it.price || 0).toLocaleString('id-ID') %></p>
+      </div>
+    <% }); %>
+  </div>
+</section>
+
+<section>
+  <h3>Pesan lewat ShopeeFood</h3>
+  <a class="btn" href="/order/shopee" target="_blank">Buka di ShopeeFood</a>
+</section>

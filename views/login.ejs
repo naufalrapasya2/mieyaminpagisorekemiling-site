@@ -1,0 +1,14 @@
+<%- include('../layout') %>
+
+<section>
+  <h2>Admin Login</h2>
+  <% if(message){ %>
+    <p class="error"><%= message %></p>
+  <% } %>
+  <form method="post" action="/admin/login">
+    <label>Email<br><input type="email" name="email" required></label>
+    <label>Password<br><input type="password" name="password" required></label>
+    <p><a href="/admin/forgot">Lupa password?</a></p>
+    <button type="submit">Login</button>
+  </form>
+</section>

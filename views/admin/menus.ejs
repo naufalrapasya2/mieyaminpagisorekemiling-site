@@ -1,0 +1,41 @@
+<%- include('../layout') %>
+
+<section>
+  <h2>Kelola Menu</h2>
+  <p><a href="/admin">Kembali</a></p>
+
+  <h3>Tambah Menu</h3>
+  <form method="post" action="/admin/menus">
+    <label>Kategori<br>
+      <select name="category_id">
+        <option value="">-- pilih --</option>
+        <% cats.forEach(function(c){ %>
+          <option value="<%= c.id %>"><%= c.name %></option>
+        <% }) %>
+      </select>
+    </label>
+    <label>Nama<br><input name="name" required></label>
+    <label>Deskripsi<br><input name="description"></label>
+    <label>Harga (angka)<br><input name="price" required></label>
+    <button type="submit">Tambah</button>
+  </form>
+
+  <h3>Daftar Menu</h3>
+  <table class="table">
+    <tr><th>ID</th><th>Nama</th><th>Kategori</th><th>Harga</th><th>Aksi</th></tr>
+    <% items.forEach(function(it){ %>
+      <tr>
+        <td><%= it.id %></td>
+        <td><%= it.name %></td>
+        <td><%= it.category_name %></td>
+        <td>Rp.<%= (it.price || 0).toLocaleString('id-ID') %></td>
+        <td>
+          <form method="post" action="/admin/menus/delete" onsubmit="return confirm('Hapus menu?');">
+            <input type="hidden" name="id" value="<%= it.id %>">
+            <button type="submit">Hapus</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+</section>
