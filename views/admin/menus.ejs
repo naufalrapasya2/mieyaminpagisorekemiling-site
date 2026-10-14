@@ -5,7 +5,7 @@
   <p><a href="/admin">Kembali</a></p>
 
   <h3>Tambah Menu</h3>
-  <form method="post" action="/admin/menus">
+  <form method="post" action="/admin/menus" enctype="multipart/form-data">
     <label>Kategori<br>
       <select name="category_id">
         <option value="">-- pilih --</option>
@@ -17,7 +17,8 @@
     <label>Nama<br><input name="name" required></label>
     <label>Deskripsi<br><input name="description"></label>
     <label>Harga (angka)<br><input name="price" required></label>
-    <label>URL Gambar<br><input name="image_url" placeholder="https://..."></label>
+    <label>URL Gambar (opsional jika upload)<br><input name="image_url" placeholder="https://..."></label>
+    <label>Upload Gambar Produk<br><input type="file" name="image" accept="image/*"></label>
     <button type="submit">Tambah</button>
   </form>
 

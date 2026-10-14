@@ -1,14 +1,14 @@
-    const menuItems = [
-      {cat:'MIE YAMIN FAVORIT', name:'MIE YAMIN MANIS', desc:'Mie Yamin Manis paling laris dan disukai banyak orang', price:25900, img:'https://images.unsplash.com/photo-1604908176338-82a1c4a0b3e8?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=0a3c4a2b1a8b1c1f2a9e3c7c5b4d5e6f'},
-      {cat:'MIE YAMIN FAVORIT', name:'MIE YAMIN ASIN', desc:'Mie Yamin Bandung Asin, Mie kenyal dengan bumbu asin khas bandung yang ringan namun kaya rasa, disajikan dengan ayam cincang, pangsit goreng dan kuah kaldu yang hangat', price:24900, img:'https://images.unsplash.com/photo-1604908554023-5f3f4b5f6a5c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a2b3c4d5e6f7a8b9c0d'},
-      {cat:'MIE YAMIN FAVORIT', name:'MIE YAMIN PEDAS', desc:'Mie Yamin Khas dengan cita rasa manis-gurih, dipadukan sambal spesial racikan Pagi Sore yang pedas menggigit.', price:26900, img:'https://images.unsplash.com/photo-1543352634-2f7f0b5f5b9c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcdef1234567890'},
-      {cat:'MIE YAMIN KOMPLIT', name:'MIE YAMIN KOMPLIT', desc:'Mie kenyal disajikan dengan ayam cincang, pangsit goreng, pangsit rebus dan kuah gurih', price:36900, img:'https://images.unsplash.com/photo-1543352634-2f7f0b5f5b9c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc111'},
-      {cat:'MIE YAMIN KOMPLIT', name:'MIE YAMIN KEJU BAKAR', desc:'Mie Yamin dengan ayam cincang dan Keju di bakar meleleh', price:27900, img:'https://images.unsplash.com/photo-1562967914-608f8262976f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=zzz111'},
-      {cat:'MIE YAMIN KOMPLIT', name:'MIE YAMIN PANGSIT', desc:'Mie Yamin dengah kuah gurih, disajikan Bersama pangsit lembut berisi daging berbumbu.', price:27900, img:'https://images.unsplash.com/photo-1547732822-3d6e6e0c9b3f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=img123'},
-      {cat:'MIE YAMIN KOMPLIT', name:'MIE YAMIN BAKSO', desc:'Mie Yamin gurih dengan sentuhan manis khas, disajikan dengan ayam cincang, pangsit goreng renyah dan bakso sapi pilihan', price:27900, img:'https://images.unsplash.com/photo-1552633528-9273d3b4d3a6?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=img456'},
-      {cat:'MIE AYAM', name:'MIE AYAM + CEKER', desc:'Mie kenyal dengan topping berbumbu gurih, dilengkpai pangsit goreng dan ceker ayam yang empuk serta kaya rasa.', price:24900, img:'https://images.unsplash.com/photo-1604908176338-82a1c4a0b3e8?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=img789'},
-      {cat:'MIE AYAM', name:'MIE AYAM + PANGSIT', desc:'Mie Kenyal berpadu dengan ayam berbumbu gurih, disajikan Bersama pangsit rebus yang lembut dan kuah kaldu hangat', price:25900, img:'https://images.unsplash.com/photo-1562967914-608f8262976f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=img101'},
-      {cat:'MIE AYAM', name:'MIE AYAM KOMPLIT', desc:'Sajian Lengkap berisi mie kenyal, ayam bumbu istimewa, bakso pangsit, ceker dan sayuran segar', price:35900, img:'https://images.unsplash.com/photo-1552633528-9273d3b4d3a6?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=img202'},
-      {cat:'PAKET HEMAT', name:'MIE AYAM + ES TEH GOKIL', desc:'Mie AYAM dengan taburan ayam kecap gurih, pangsit goreng renyah dan sayuran segar Bersama Es teh Jumbo', price:30900, img:'https://images.unsplash.com/photo-1542444459-db6a9fd07b20?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=img303'},
-      {cat:'PAKET HEMAT', name:'MIE YAMIN + ES TEH GOKIL', desc:'Mie Yamin ditemani Es Teh yang legit!', price:30900, img:'https://images.unsplash.com/photo-1542444459-db6a9fd07b20?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=img404'}
-    ];
+    await run(`CREATE TABLE IF NOT EXISTS menu_items (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      category_id INTEGER,
+      name TEXT,
+      description TEXT,
+      price INTEGER,
+      image_url TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE SET NULL
+    );`);
+
+    // ensure public uploads directory exists so admin can upload images
+    const uploadsDir = path.join(__dirname, '..', 'public', 'uploads');
+    if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });

@@ -2,6 +2,25 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/db');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+
+// ensure uploads directory exists
+const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const base = path.basename(file.originalname, ext).replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    cb(null, base + '-' + Date.now() + ext);
+  }
+});
+const upload = multer({ storage });
 
 // middleware
 function ensureAdmin(req,res,next){
@@ -60,9 +79,14 @@ router.get('/menus', ensureAdmin, (req,res)=>{
   });
 });
 
-router.post('/menus', ensureAdmin, (req,res)=>{
+// accept multipart/form-data with optional image upload
+router.post('/menus', ensureAdmin, upload.single('image'), (req,res)=>{
   const { category_id, name, description, price, image_url } = req.body;
-  db.run(`INSERT INTO menu_items (category_id,name,description,price,image_url) VALUES (?,?,?,?,?)`, [category_id||null,name,description,price,image_url||null], function(err){
+  let finalImage = image_url || null;
+  if(req.file){
+    finalImage = `/uploads/${req.file.filename}`;
+  }
+  db.run(`INSERT INTO menu_items (category_id,name,description,price,image_url) VALUES (?,?,?,?,?)`, [category_id||null,name,description,price,finalImage], function(err){
     if(err) return res.status(500).send('DB error');
     res.redirect('/admin/menus');
   });
@@ -70,7 +94,14 @@ router.post('/menus', ensureAdmin, (req,res)=>{
 
 router.post('/menus/delete', ensureAdmin, (req,res)=>{
   const { id } = req.body;
-  db.run(`DELETE FROM menu_items WHERE id = ?`, [id], function(err){ if(err) return res.status(500).send('DB error'); res.redirect('/admin/menus'); });
+  // try to delete associated file if exists
+  db.get(`SELECT image_url FROM menu_items WHERE id = ?`, [id], (err,row)=>{
+    if(row && row.image_url && row.image_url.startsWith('/uploads/')){
+      const filePath = path.join(__dirname,'..','public', row.image_url);
+      fs.unlink(filePath, (e)=>{});
+    }
+    db.run(`DELETE FROM menu_items WHERE id = ?`, [id], function(err){ if(err) return res.status(500).send('DB error'); res.redirect('/admin/menus'); });
+  });
 });
 
 // Orders management
